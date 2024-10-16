@@ -99,6 +99,7 @@ app.delete('/task/:id', async (req, res) => {
 
 // Start the Express server
 const PORT = process.env.PORT || 5000; // Set the port dynamically or default to 5000
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
