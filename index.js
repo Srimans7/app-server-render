@@ -69,10 +69,10 @@ app.post('/task', async (req, res) => {
 // Update a task
 app.put('/task/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, description, dur, comp, mon, date, status, week } = req.body;
+  const { title, description, dur, comp, mon, date, status, week, img } = req.body;
 
   try {
-    const task = await Task.findByIdAndUpdate(id, { title, description, dur, comp, mon, date, status, week }, { new: true });
+    const task = await Task.findByIdAndUpdate(id, { title, description, dur, comp, mon, date, status, week, img }, { new: true });
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }
