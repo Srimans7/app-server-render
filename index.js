@@ -6,7 +6,7 @@ const cors = require('cors');
 const mongoURI = 'mongodb+srv://sriman:sdevi1978@mern.b1fzide.mongodb.net/?retryWrites=true&w=majority&appName=mern';
 
 // Import the Task model (which you will define separately in `models/Task.js`)
-const Task = require('./models/Task');
+const Task = require('./models/Task1');
 
 // Initialize Express app
 const app = express();
@@ -98,7 +98,7 @@ app.delete('/task/:id', async (req, res) => {
 });
 
 // Start the Express server
-const PORT = process.env.PORT || 5000; // Set the port dynamically or default to 5000
+const PORT = process.env.PORT || 6000; // Set the port dynamically or default to 5000
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
