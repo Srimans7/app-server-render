@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Define the Task schema
 const TaskSchema = new mongoose.Schema({
   _id: { type: String, required: true }, // Using a string for the primary key as you did in Realm
   date: { type: Date, required: true },
@@ -11,8 +10,15 @@ const TaskSchema = new mongoose.Schema({
   week: { type: [String], required: true }, // Array of strings
   img: { type: [String], default: [] }, // Array of strings for image URLs
   status: { type: String, required: true }, // Status of the task
-}, { timestamps: true }); // Adds createdAt and updatedAt timestamps
+}, { timestamps: false }); // Adds createdAt and updatedAt timestamps
 
-const Task = mongoose.model('Task', TaskSchema);
+const userSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  tasks: [TaskSchema], // Array of tasks embedded in the User document
+  friend: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+});
 
-module.exports = Task;
+module.exports = mongoose.model('AppUser', userSchema);
