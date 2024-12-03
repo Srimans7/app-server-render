@@ -17,8 +17,9 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   tasks: [TaskSchema], // Array of tasks embedded in the User document
-  friend: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friend: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
 });
+
 
 module.exports = mongoose.model('AppUser', userSchema);
