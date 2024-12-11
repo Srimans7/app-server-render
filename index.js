@@ -5,6 +5,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('./middleware/auth');
+const admin = require('firebase-admin');
 
 // MongoDB Atlas connection string (replace with your actual credentials)
 const mongoURI = process.env.MDB;
@@ -14,11 +15,16 @@ const Task = require('./models/User.js');
 const User = require('./models/User');
 
 
+
 // Initialize Express app
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+const serviceAccount = require('./apps-6cde5-firebase-adminsdk-roh56-a8aef72067.json');
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 // Connect to MongoDB using Mongoose
 const connectDB = async () => {
   try {
@@ -36,7 +42,44 @@ const connectDB = async () => {
 
 connectDB();
 
+
+const sendNotification = async (friendToken, title,body ) => {
+  const message = {
+    token: friendToken,
+    notification: {
+      title: title,
+      body: body,
+    },
+    data: {
+      type: 'friend_action',
+      action: 'button_clicked',
+    },
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log('Notification sent successfully:', response);
+  } catch (error) {
+    console.error('Error sending notification:', error);
+  }
+};
+
+
 // Define the API routes
+
+app.post('/send-notification', async (req, res) => {
+  try {
+    const { friendToken, title, body } = req.body;
+    setTimeout(() => {
+      sendNotification(friendToken, title, body);
+      console.log(`Notification sent to ${friendToken}`);
+    }, 10000);
+  }
+  catch (error) {
+    console.error("firebase-message Error:", error); // Log the error details to the console
+    res.status(500).json({ error: 'firebase-message failed', details: error.message }); // Return more detailed error message
+  }
+});
 
 
 app.post('/register', async (req, res) => {
