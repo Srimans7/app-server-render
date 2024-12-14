@@ -65,14 +65,14 @@ const sendNotification = async (friendToken, title,body ) => {
 };
 
 
-// Define the API route
+// Define the API routes
 
 app.post('/send-notification', async (req, res) => {
   try {
     const { friendToken, title, body } = req.body;
    
       sendNotification(friendToken, title, body);
-      res.status(200).json({ message: 'firebase-message sent'});
+ 
   }
   catch (error) {
     console.error("firebase-message Error:", error); // Log the error details to the console
