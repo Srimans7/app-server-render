@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   tasks: [TaskSchema], // Array of tasks embedded in the User document
   friend: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
+  token: { type: String, required: false },
 });
 
 

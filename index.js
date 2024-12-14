@@ -65,15 +65,14 @@ const sendNotification = async (friendToken, title,body ) => {
 };
 
 
-// Define the API routes
+// Define the API route
 
 app.post('/send-notification', async (req, res) => {
   try {
     const { friendToken, title, body } = req.body;
-    setTimeout(() => {
+   
       sendNotification(friendToken, title, body);
-      console.log(`Notification sent to ${friendToken}`);
-    }, 10000);
+      res.status(200).json({ message: 'firebase-message sent'});
   }
   catch (error) {
     console.error("firebase-message Error:", error); // Log the error details to the console
@@ -397,6 +396,44 @@ app.post('/accept-request/:id', auth, async (req, res) => {
     await sender.save();
 
     res.json({ message: "Friend request accepted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/token', auth, async (req, res) => {
+  
+  const {token} = req.body;
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Authenticated user not found" });
+    }
+    // Add sender to user's friend list and vice versa
+    user.token = token;
+
+    await user.save();
+    res.json({ message: "token updated" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/notify/:id', auth, async (req, res) => {
+  
+  const { id } = req.params; // ID of the user who sent the request
+  const {title, body} = req.body;
+
+  try {
+   
+    const sender = await User.findById(id);
+    if (!sender) {
+      return res.status(404).json({ message: "Sender user not found" });
+    }
+
+    const token = sender.token;
+    sendNotification(token, title, body);
+    res.json({ message: "notification sent" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
