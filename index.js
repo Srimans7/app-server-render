@@ -264,6 +264,7 @@ app.delete('/partner-task/:id', auth, async (req, res) => {
 
     // Save the updated friend document
     await friend.save();
+    sendNotification(friend.token,"Task verified","your has been verfied by your friend");
     res.json({ message: 'Task deleted successfully' });
   } catch (error) {
     console.error(error); // Log the error for debugging
@@ -362,7 +363,7 @@ app.post('/send-request/:id',auth, async (req, res) => {
 
     recipient.friendRequests.push(senderId);
     await recipient.save();
-
+    sendNotification(recipient.token,"Friend Request","your got a new friend request, see in your requests");
     res.json({ message: 'Friend request sent' });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -394,7 +395,7 @@ app.post('/accept-request/:id', auth, async (req, res) => {
 
     await user.save();
     await sender.save();
-
+    sendNotification(sender.token,"Friend Request","your friend request got accepted");
     res.json({ message: "Friend request accepted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
