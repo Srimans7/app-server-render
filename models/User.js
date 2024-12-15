@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
   friend: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User', default: [] }],
   token: { type: String, required: false },
+   bio: { type: String, required: false, default: 'No bio' }
 });
 
 

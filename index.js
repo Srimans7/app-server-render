@@ -194,7 +194,7 @@ app.put('/task/:id', auth, async (req, res) => {
     task.status = status || task.status;
     task.week = week || task.week;
     task.img = img || task.img;
-
+   
     // Save the updated user document
     await user.save();
     res.json(task);
@@ -415,6 +415,39 @@ app.post('/token', auth, async (req, res) => {
 
     await user.save();
     res.json({ message: "token updated" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.put('/bio', auth, async (req, res) => {
+  
+  const {bio} = req.body;
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Authenticated user not found" });
+    }
+    // Add sender to user's friend list and vice versa
+    user.bio = bio;
+   console.log("bio",bio,user.bio)
+    await user.save();
+    res.json({ message: "bio updated" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/bio', auth, async (req, res) => {
+  
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Authenticated user not found" });
+    }
+    // Add sender to user's friend list and vice versa
+    
+    res.json({bio : user.bio});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
